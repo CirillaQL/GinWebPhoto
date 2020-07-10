@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/user/static/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/user/static/css/AddPhoto.css">
+    <script src="/user/static/libs/jquery-3.5.0/jquery-3.5.0.min.js"></script>
+    <script src="/user/static/js/bootstrap.js"></script>
+    <title>照片查看</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark navbar-fixed-top">
+    <span class="navbar-brand" >{{.name}}</span>
+      <ul class="navbar-nav">
+            <li class="nav-item active">
+                  <a class="nav-link" href="./?usernmae={{.name}}/AddPicture">上传图片</a>
+                </li>
+            <li class="nav-item active">
+                  <a class="nav-link" href="./Quit">退出登录</a>
+                </li>
+          </ul>
+</nav>
+<div class="text-center" id="main-show">
+    <br/>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{.img}}" class="img-thumbnail">
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-link">下载图片</button>
+                <br/>
+
+                <br/>
+                <button>测试</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

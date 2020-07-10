@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <title>个人主页</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark navbar-fixed-top">
+    <span class="navbar-brand" >{{.name}}</span>
+      <ul class="navbar-nav">
+            <li class="nav-item active">
+                  <a class="nav-link" href="./?usernmae={{.name}}/AddPicture">上传图片</a>
+                </li>
+            <li class="nav-item active">
+                  <a class="nav-link" href="./Quit">退出登录</a>
+                </li>
+          </ul>
+</nav>
+
+<br>
+<div class="text-center" id="main-show">
+    <br/>
+
+    <div class="container">
+        <div id="username" value="{{.name}}"></div>
+        <div class="row">
+            {{range .image}}
+            <div class="col-md-4">
+                <br/>
+                <div class="card">
+                    <img class="card-img-top img-thumbnail" src="{{.LocalAddress}}" onclick="javascript:window.open(this.src)">
+                    <div class="card-body">
+                        <h4 class="card-title">{{.Name}}</h4>
+                        <p class="card-text">{{.Describe}}</p>
+                        <a class="btn btn-primary check" id="Check" href="../{{.WebAddress}}">查看</a>
+                    </div>
+                </div>
+                <br/>
+            </div>
+            {{end}}
+            <!-- 说明：每row行共12列，分个3div，每个div平占4列，即3个*4列=12列 -->
+        </div>
+    </div>
+</div>
+
+
+<script src="../static/libs/jquery-3.5.0/jquery-3.5.0.min.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+
+
+<script>
+    function upload() {
+        var allurl = window.location.href;
+        var url = allurl.split("?")
+        var name = url[1]
+        window.location.href("/homepage/AddPicture?"+name)
+    }
+</script>
+</body>
+</html>

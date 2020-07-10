@@ -1,0 +1,17 @@
+html,body{
+    background-color: #8bbafe;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.row {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+#output{
+    width: 800px;
+    height: 450px;
+}
+

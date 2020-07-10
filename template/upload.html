@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="../static/libs/jquery-3.5.0/jquery-3.5.0.min.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/AddPhoto.css">
+    <title>上传</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark navbar-static-top">
+    <span class="navbar-brand">{{.name}}</span>
+    <button class="navbar-toggler" data-toggle="collapse" data-target="#navbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="navbar" class="collapse navbar-collapse">
+        <ul class="navbar-nav">
+        </ul>
+    </div>
+</nav>
+<br>
+<div class="text-center" id="main-show">
+    <form action="/homepage/SavePicture" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="file" name="file"  accept="image/*" class="imgInput"><br><br><br>
+                <div id="output">
+                    <img class="img-fluid" src="" id="img">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <textarea cols="30" rows="10" type="text" name="text"></textarea>
+                <!--<input type="text" name="text" placeholder="请填写备注" ><br><br>-->
+                <br/>
+                <input type="submit" value="点击上传">
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+    $(".imgInput").change(function(){
+        $("#img").attr("src",URL.createObjectURL($(this)[0].files[0]));
+    });
+</script>
+</html>
