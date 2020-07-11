@@ -5,9 +5,10 @@ import (
 	"GinWebPhoto/middleware"
 	"GinWebPhoto/util"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func main(){
+func main() {
 	router := gin.Default()
 
 	util.InitDB()
@@ -24,18 +25,22 @@ func main(){
 	router.StaticFile("/favicon.ico", "./static/icon/favicon.ico")
 
 	//未登录也也可以访问的部分
-	router.GET("/")
-	router.GET("/login",controllers.LoginGet)
-	router.POST("/login",controllers.LoginPost)
-	router.GET("/register",controllers.RegisterGet)
-	router.POST("/register",controllers.RegisterPost)
+	router.GET("/", func(context *gin.Context) {
+		context.HTML(http.StatusOK, "MainPage.html", gin.H{})
+	})
+	router.GET("/login", controllers.LoginGet)
+	router.POST("/login", controllers.LoginPost)
+	router.GET("/register", controllers.RegisterGet)
+	router.POST("/register", controllers.RegisterPost)
 
 	//用户主界面
 	user := router.Group("/user")
 	user.Use(middleware.VerifyCookie())
 	{
-		user.GET("/homepage/:username",controllers.UserIndex)
+		user.GET("/homepage/:username", controllers.UserIndex)
 		user.GET("/storage/:username/Photo/:img", controllers.PictureShow)
+		user.GET("/homepage/:username/AddPicture", controllers.GetAddPicture)
+		user.POST("/action/:username/SavePicture", controllers.GetPicture)
 	}
 
 	router.Run(":9090")

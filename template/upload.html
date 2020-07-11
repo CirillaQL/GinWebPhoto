@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="../static/libs/jquery-3.5.0/jquery-3.5.0.min.js"></script>
-    <script src="../static/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/AddPhoto.css">
+    <script src="/user/static/libs/jquery-3.5.0/jquery-3.5.0.min.js"></script>
+    <script src="/user/static/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/user/static/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/user/static/css/AddPhoto.css">
     <title>上传</title>
 </head>
 <body>
@@ -23,7 +23,7 @@
 </nav>
 <br>
 <div class="text-center" id="main-show">
-    <form action="/homepage/SavePicture" method="post" enctype="multipart/form-data">
+    <form action="/user/action/{{.name}}/SavePicture" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-6">
                 <input type="file" name="file"  accept="image/*" class="imgInput"><br><br><br>

@@ -1,7 +1,6 @@
 package util
 
 import (
-
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
@@ -16,14 +15,10 @@ func InitDB() {
 	if err != nil {
 		log.Panicln("err:", err.Error())
 	}
-	Db.SetMaxOpenConns(0)
-	Db.SetMaxIdleConns(0)
+	Db.SetMaxOpenConns(12)
+	Db.SetMaxIdleConns(3)
 	err = Db.Ping()
-	if err != nil{
-		log.Panicln("数据库链接出错！ error: ",err)
+	if err != nil {
+		log.Panicln("数据库链接出错！ error: ", err)
 	}
 }
-
-
-
-

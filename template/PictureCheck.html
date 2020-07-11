@@ -16,7 +16,7 @@
                   <a class="nav-link" href="./?usernmae={{.name}}/AddPicture">上传图片</a>
                 </li>
             <li class="nav-item active">
-                  <a class="nav-link" href="./Quit">退出登录</a>
+                  <a class="nav-link" href="https://localhost:9090">退出登录</a>
                 </li>
           </ul>
 </nav>
@@ -28,11 +28,12 @@
                 <img src="{{.img}}" class="img-thumbnail">
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-link">下载图片</button>
-                <br/>
-
-                <br/>
-                <button>测试</button>
+                <div class="justify-content-center">
+                    <a class="btn btn-primary" href="{{.img}}" download="{{.img}}">下载图片</a>
+                    <br/>
+                    <br/>
+                    <a class="btn btn-primary" href="{{.img}}" >删除图片</a>
+                </div>
             </div>
         </div>
     </div>

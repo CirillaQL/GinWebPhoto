@@ -16,5 +16,6 @@ func TestSavePictureListIntoDataBase(t *testing.T) {
 	util.InitDB()
 	var d []Picture
 	d = GetPictureListFromDir("Frankcox")
+	fmt.Println(d)
 	SavePictureListIntoDataBase(d)
 }
