@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"GinWebPhoto/util"
-	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -20,14 +19,14 @@ func VerifyCookie() gin.HandlerFunc {
 		defer conn.Close()
 
 		userID, err := c.Cookie("userID")
-		fmt.Println(userID)
+		//fmt.Println(userID)
 		if err != nil || userID == "" {
 			c.Abort()
 			c.Redirect(http.StatusMovedPermanently, "/")
 		}
 
 		verifyResult, err := redis.Bool(conn.Do("SISMEMBER", "userExists", userID))
-		fmt.Println(verifyResult)
+		//fmt.Println(verifyResult)
 		if verifyResult != true {
 			c.Abort()
 			c.Redirect(http.StatusMovedPermanently, "/")

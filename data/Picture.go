@@ -82,3 +82,18 @@ func SavePictureToDataBase(picture Picture) (bool, error) {
 	}
 	return true, nil
 }
+
+//DeletePictureFromDB 从数据库中删除对应的图片
+func DeletePictureFromDB(picture string) (bool, error) {
+	stmt, err := util.Db.Prepare("DELETE FROM Picture WHERE Name = ?")
+	if err != nil {
+		log.Fatalln(err)
+		return false, err
+	}
+	res, err := stmt.Exec(picture)
+	_, err = res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}

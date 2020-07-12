@@ -41,6 +41,8 @@ func main() {
 		user.GET("/storage/:username/Photo/:img", controllers.PictureShow)
 		user.GET("/homepage/:username/AddPicture", controllers.GetAddPicture)
 		user.POST("/action/:username/SavePicture", controllers.GetPicture)
+		user.GET("/Quit", controllers.QuitLogin)
+		user.GET("/action/:username/DeletePicture/:picture", controllers.DeletePicture)
 	}
 
 	router.Run(":9090")
