@@ -19,3 +19,9 @@ func TestSavePictureListIntoDataBase(t *testing.T) {
 	fmt.Println(d)
 	SavePictureListIntoDataBase(d)
 }
+
+func TestDeletePictureFromDir(t *testing.T) {
+	username := "Frankcox"
+	name := "vmw3e3.png"
+	DeletePictureFromDir(username, name)
+}

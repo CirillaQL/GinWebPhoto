@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"GinWebPhoto/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -22,6 +23,7 @@ func RemoveUserIDFromRedis(userID string) (bool, error) {
 
 //退出登录
 func QuitLogin(c *gin.Context) {
+	fmt.Println("调用退出")
 	userID, err := c.Cookie("userID")
 	if nil != err {
 		c.Redirect(http.StatusMovedPermanently, "http://localhost:9090")

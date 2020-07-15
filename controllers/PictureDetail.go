@@ -3,8 +3,9 @@ package controllers
 import (
 	"GinWebPhoto/data"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func PictureShow(context *gin.Context) {
@@ -21,7 +22,10 @@ func PictureShow(context *gin.Context) {
 
 func DeletePicture(context *gin.Context) {
 	picture := context.Param("picture")
-
+	username := context.Param("username")
 	data.DeletePictureFromDB(picture)
-
+	ans, err := data.DeletePictureFromDir(username, picture)
+	fmt.Println(ans)
+	fmt.Println(err)
+	context.Redirect(http.StatusMovedPermanently, "/user/homepage/"+username)
 }

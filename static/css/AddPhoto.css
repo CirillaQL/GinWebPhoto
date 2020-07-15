@@ -10,8 +10,10 @@ html,body{
     margin-bottom: 4px;
 }
 
-#output{
-    width: 800px;
-    height: 450px;
+#imgoutput{
+    margin-left: 50px;
 }
 
+#TextInput{
+    margin-top: 10px;
+}

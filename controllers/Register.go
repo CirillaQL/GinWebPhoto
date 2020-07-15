@@ -53,6 +53,7 @@ func RegisterPost(c *gin.Context) {
 		log.Println(err)
 		log.Println(result)
 	}
+	//c.SetCookie("userID", userRegister.Uuid, 1*3600, "/", "106.54.100.180", false, true)
 	c.SetCookie("userID", userRegister.Uuid, 1*3600, "/", "localhost", false, true)
 	c.Redirect(http.StatusMovedPermanently, "/user/homepage/"+username)
 }

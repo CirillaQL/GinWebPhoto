@@ -11,31 +11,37 @@
     <title>上传</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark bg-dark navbar-static-top">
-    <span class="navbar-brand">{{.name}}</span>
-    <button class="navbar-toggler" data-toggle="collapse" data-target="#navbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div id="navbar" class="collapse navbar-collapse">
-        <ul class="navbar-nav">
-        </ul>
-    </div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <ul class="navbar-nav">
+        <a class="navbar-brand">{{.name}}</a>
+        <div class="collapse navbar-collapse justify-content-end">
+            <li class="nav-item active">
+                <a class="nav-link" href="./{{.name}}/AddPicture">上传图片</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="../Quit">退出登录</a>
+            </li>
+        </div>
+    </ul>
 </nav>
 <br>
 <div class="text-center" id="main-show">
     <form action="/user/action/{{.name}}/SavePicture" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-6">
-                <input type="file" name="file"  accept="image/*" class="imgInput"><br><br><br>
-                <div id="output">
-                    <img class="img-fluid" src="" id="img">
+                <div id="imgoutput">
+                    <input type="file" name="file"  accept="image/*" class="imgInput"><br><br><br>
+                    <div>
+                        <img class="img-fluid" src="" id="img">
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <textarea cols="30" rows="10" type="text" name="text"></textarea>
-                <!--<input type="text" name="text" placeholder="请填写备注" ><br><br>-->
-                <br/>
-                <input type="submit" value="点击上传">
+                <div id="TextInput">
+                    <textarea class="form-control" rows="5" cols="10" type="text" name="text"></textarea>
+                    <br/>
+                    <button class="btn btn-primary mb-2" type="submit">点击上传</button>
+                </div>
             </div>
         </div>
     </form>

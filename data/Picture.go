@@ -2,11 +2,12 @@ package data
 
 import (
 	"GinWebPhoto/util"
-	_ "database/sql"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
+//Picture 图片的结构体
 type Picture struct {
 	Name         string
 	LocalAddress string
@@ -92,6 +93,16 @@ func DeletePictureFromDB(picture string) (bool, error) {
 	}
 	res, err := stmt.Exec(picture)
 	_, err = res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+//DeletePictureFromDir 从本地硬盘中删除对应的
+func DeletePictureFromDir(username string, filename string) (bool, error) {
+	path := "./storage/" + username + "/Photo/" + filename
+	err := os.Remove(path)
 	if err != nil {
 		return false, err
 	}

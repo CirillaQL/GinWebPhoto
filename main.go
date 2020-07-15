@@ -4,8 +4,9 @@ import (
 	"GinWebPhoto/controllers"
 	"GinWebPhoto/middleware"
 	"GinWebPhoto/util"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 	router.Static("/storage", "./storage")
 	router.StaticFile("/favicon.ico", "./static/icon/favicon.ico")
 
-	//未登录也也可以访问的部分
+	//未登录也可以访问的部分
 	router.GET("/", func(context *gin.Context) {
 		context.HTML(http.StatusOK, "MainPage.html", gin.H{})
 	})
@@ -41,8 +42,9 @@ func main() {
 		user.GET("/storage/:username/Photo/:img", controllers.PictureShow)
 		user.GET("/homepage/:username/AddPicture", controllers.GetAddPicture)
 		user.POST("/action/:username/SavePicture", controllers.GetPicture)
-		user.GET("/Quit", controllers.QuitLogin)
 		user.GET("/action/:username/DeletePicture/:picture", controllers.DeletePicture)
+		user.GET("/action/:username/Quit", controllers.QuitLogin)
+
 	}
 
 	router.Run(":9090")
