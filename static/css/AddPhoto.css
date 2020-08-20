@@ -17,3 +17,11 @@ html,body{
 #TextInput{
     margin-top: 10px;
 }
+
+#InputText{
+    width: 100%;
+    height: 400px;
+    overflow: auto;
+    word-break: break-all;
+    resize: none;
+}

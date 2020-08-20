@@ -11,7 +11,7 @@ var Db *sql.DB
 //InitDB 初始化数据库
 func InitDB() {
 	var err error
-	Db, err = sql.Open("mysql", "root:123456@/GinWebPhoto?charset=utf8")
+	Db, err = sql.Open("mysql", "root:123456@tcp(127.0.0.1:3307)/GinWebPhoto?charset=utf8")
 	if err != nil {
 		log.Panicln("err:", err.Error())
 	}

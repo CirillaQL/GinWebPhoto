@@ -16,16 +16,18 @@ func GetAddPicture(c *gin.Context) {
 	})
 }
 
-//GetPicture 保存图片到本地
+//GetPicture 保存图片
 func GetPicture(ctx *gin.Context) {
 	file, err := ctx.FormFile("file")
-	des := ctx.PostForm("text")
+	description := ctx.PostForm("text")
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 	username := ctx.Param("username")
 	path := "./storage/" + username + "/Photo/" + file.Filename
+
+	//保存到本地
 	ok := ctx.SaveUploadedFile(file, path)
 	if ok != nil {
 		log.Fatal("保存时错误")
@@ -36,7 +38,7 @@ func GetPicture(ctx *gin.Context) {
 			Name:         file.Filename,
 			LocalAddress: path,
 			WebAddress:   path[1:],
-			Describe:     des,
+			Describe:     description,
 			Owner:        username,
 		}
 		fmt.Println(picture)
@@ -47,5 +49,4 @@ func GetPicture(ctx *gin.Context) {
 		//保存后，跳转到主页面
 		ctx.Redirect(http.StatusMovedPermanently, "/user/homepage/"+username)
 	}
-
 }

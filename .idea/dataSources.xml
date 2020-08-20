@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="GinWebPhoto" uuid="97168a86-3089-469f-a666-7da2090066ae">
+    <data-source source="LOCAL" name="MySQL - @localhost" uuid="4d2f4c58-29ed-4d9e-98ce-c331dc7fa316">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3307</jdbc-url>
     </data-source>
   </component>
 </project>

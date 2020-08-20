@@ -4,9 +4,9 @@ import (
 	"GinWebPhoto/controllers"
 	"GinWebPhoto/middleware"
 	"GinWebPhoto/util"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	_ "github.com/gookit/color"
+	"net/http"
 )
 
 func main() {

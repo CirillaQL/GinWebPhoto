@@ -77,51 +77,6 @@ func (user User) InsertUserIntoRedis() (bool, error) {
 	}
 }
 
-//CheckUserByID 通过ID查询用户
-func (user User) CheckUserByID(ch chan bool) {
-	var result string
-	rows, err := util.Db.Query("SELECT uuid FROM User;")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	defer rows.Close()
-	for rows.Next() {
-		err = rows.Scan(&result)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		if user.Uuid == result {
-			ch <- false
-		} else {
-			continue
-		}
-	}
-	ch <- true
-}
-
-//CheckUserByName 通过Name查询用户
-func (user User) CheckUserByName(ch chan bool) {
-	var result string
-	rows, err := util.Db.Query("SELECT UserName FROM User;")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	defer rows.Close()
-	for rows.Next() {
-		err = rows.Scan(&result)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		if user.UserName == result {
-			ch <- false
-		} else {
-			continue
-		}
-	}
-	ch <- true
-}
-
 //CheckUserByPhone 通过Phone查询用户
 func (user User) CheckUserByPhone(ch chan bool) {
 	var result string
@@ -142,22 +97,4 @@ func (user User) CheckUserByPhone(ch chan bool) {
 		}
 	}
 	ch <- true
-}
-
-//CheckUser 并行调用三个检查，判断数据库中是否有重名
-func (user User) CheckUser() bool {
-	ch1 := make(chan bool)
-	ch2 := make(chan bool)
-	ch3 := make(chan bool)
-	go user.CheckUserByID(ch1)
-	go user.CheckUserByName(ch2)
-	go user.CheckUserByPhone(ch3)
-	result_1 := <-ch1
-	result_2 := <-ch2
-	result_3 := <-ch3
-	if result_1 == true && result_2 == true && result_3 == true {
-		return true
-	} else {
-		return false
-	}
 }

@@ -22,19 +22,22 @@ func RegisterGet(c *gin.Context) {
 */
 //RegisterPost 用户注册处理
 func RegisterPost(c *gin.Context) {
+	ch := make(chan bool)
 	username := c.PostForm("name")
 	mobile := c.PostForm("mobile")
 	password := c.PostForm("psd")
-	log.Println("用户注册:    ", "用户名：", username, "手机号码：", mobile, "密码：", password)
 
+	log.Println("用户注册:    ", "用户名：", username, "手机号码：", mobile, "密码：", password)
 	userRegister := data.User{
 		Uuid:      data.CreateID(),
 		UserName:  username,
 		Password:  password,
 		UserPhone: mobile,
 	}
+	go userRegister.CheckUserByPhone(ch)
 	userRegister.Encode()
-	ans := userRegister.CheckUser()
+	ans := <-ch
+
 	if ans == false {
 		log.Println("注册信息重复")
 		c.Redirect(http.StatusMovedPermanently, "/register")

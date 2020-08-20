@@ -93,7 +93,6 @@ h2{
 	color: red;
 }
 .group_input li .msg.onSuccess {
-    background: #f7fafc url(../../storage/Frankcox/Photo/reg_bg.png) no-repeat;
     background-position: -9px -4px;
     color: transparent;
     width: 18px;
