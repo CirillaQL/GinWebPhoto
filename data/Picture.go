@@ -74,9 +74,20 @@ func GetPictureListFromDB(username string) []Picture {
 
 //SavePictureToDataBase 保存图片到数据库
 func SavePictureToDataBase(picture Picture) (bool, error) {
+	tx, _ := util.Db.Begin()
+	defer tx.Rollback()
 	stmt, _ := util.Db.Prepare("insert into Picture(Name, LocalAddress, WebAddress, PhotoInfo, Owner) value (?,?,?,?,?);")
 	defer stmt.Close()
 	_, err := stmt.Exec(picture.Name, picture.LocalAddress, picture.WebAddress, picture.Describe, picture.Owner)
+	if err != nil {
+		log.Println("插入数据库失败！ ERROR: ", err)
+		return false, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		log.Println("插入数据库失败！ ERROR: ", err)
+		return false, err
+	}
 	if err != nil {
 		log.Println("插入数据库失败！ ERROR: ", err)
 		return false, err
@@ -86,13 +97,17 @@ func SavePictureToDataBase(picture Picture) (bool, error) {
 
 //DeletePictureFromDB 从数据库中删除对应的图片
 func DeletePictureFromDB(picture string) (bool, error) {
+	tx, _ := util.Db.Begin()
+	defer tx.Rollback()
 	stmt, err := util.Db.Prepare("DELETE FROM Picture WHERE Name = ?")
 	if err != nil {
 		log.Fatalln(err)
 		return false, err
 	}
+	defer stmt.Close()
 	res, err := stmt.Exec(picture)
 	_, err = res.RowsAffected()
+	err = tx.Commit()
 	if err != nil {
 		return false, err
 	}
