@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/user/static/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/user/static/css/PictureShow.css">
+    <link rel="stylesheet" type="text/css" href="/user/static/css/index.css">
     <script src="/user/static/libs/jquery-3.5.0/jquery-3.5.0.min.js"></script>
     <script src="/user/static/js/bootstrap.js"></script>
     <title>照片查看</title>
@@ -14,10 +14,10 @@
         <a class="navbar-brand">{{.name}}</a>
         <div class="collapse navbar-collapse justify-content-end">
             <li class="nav-item active">
-                <a class="nav-link" href="./{{.name}}/AddPicture">上传图片</a>
+                <a class="nav-link" href="../../../homepage/{{.name}}/AddPicture">上传图片</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="../Quit">退出登录</a>
+                <a class="nav-link" href="../../../action/{{.name}}/Quit">退出登录</a>
             </li>
         </div>
     </ul>
