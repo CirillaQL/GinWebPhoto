@@ -53,7 +53,7 @@ func LoginPost(c *gin.Context) {
 			if result == false {
 				util.CreateDir(user.UserName)
 			}
-			c.SetCookie("token", token, 1*3600, "/", "localhost", false, true)
+			c.SetCookie("token", token, 5*60, "/", "localhost", false, true)
 			c.Redirect(http.StatusMovedPermanently, "/user/homepage/"+user.UserName)
 		}
 	} else {

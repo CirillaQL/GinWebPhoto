@@ -54,3 +54,12 @@ func GenerateToken(userid, username, password string) (string, error) {
 	}
 	return signedToken, nil
 }
+
+func ParseToken(tokenSrt string, SecretKey []byte) (claims jwt.Claims, err error) {
+	var token *jwt.Token
+	token, err = jwt.Parse(tokenSrt, func(*jwt.Token) (interface{}, error) {
+		return SecretKey, nil
+	})
+	claims = token.Claims
+	return
+}

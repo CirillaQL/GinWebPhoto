@@ -20,13 +20,14 @@ func VerifyCookie() gin.HandlerFunc {
 		defer conn.Close()
 
 		token, err := c.Cookie("token")
-		fmt.Println("中间件检测，当前Cookie中id为： ", token)
-		if err != nil || userID == "" {
+		fmt.Println("中间件检测，当前Cookie中token为： ", token)
+
+		if err != nil || token == "" {
 			c.Abort()
 			c.Redirect(http.StatusMovedPermanently, "/")
 		}
 
-		verifyResult, err := redis.Bool(conn.Do("hmget", "LoginUser", token))
+		verifyResult, err := redis.Bool(conn.Do("sismember", "LoginUser", token))
 		fmt.Println(verifyResult)
 		if verifyResult != true {
 			c.Abort()

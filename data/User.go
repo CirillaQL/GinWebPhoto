@@ -66,12 +66,12 @@ func (user User) InsertUserIntoRedis(token string) (bool, error) {
 	var conn = util.Pool.Get()
 	defer conn.Close()
 	fmt.Println("Token: ", token)
-	repl, err := redis.String(conn.Do("hmset", "LoginUser", token, user.Uuid))
+	repl, err := redis.Int64(conn.Do("sadd", "LoginUser", token))
 	if err != nil {
 		log.Println(err, repl)
 		return false, err
 	} else {
-		_, err = conn.Do("EXPIRE", "userExists", 3600)
+		_, err = conn.Do("EXPIRE", "LoginUser", 300)
 		if err != nil {
 			log.Fatal("用户: ", user.UserName, " 添加cookie失败！ Error: ", err)
 			return false, err
