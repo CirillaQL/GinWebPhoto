@@ -19,7 +19,6 @@ func LoginGet(c *gin.Context) {
 func LoginPost(c *gin.Context) {
 	phoneNumber := c.PostForm("mobile")
 	password := c.PostForm("psd")
-
 	/*
 		1.解析Post请求，获取电话和密码
 		2.从数据库中查找用户
@@ -29,20 +28,20 @@ func LoginPost(c *gin.Context) {
 		6.设置Cookie,跳转到主页(注意，此处应该调整Cookie保存时间，暂时按照1小时处理)
 	*/
 	var user data.User
-	result := util.Db.QueryRow("select * from User where Phone = ?", phoneNumber)
-	err := result.Scan(&user.Uuid, &user.UserName, &user.UserPhone, &user.Password)
-	fmt.Println(user)
-	if err != nil {
-		log.Println("查询失败")
+
+	//从数据库中查询用户信息
+	ch := make(chan bool, 1)
+	go data.CheckUserByPhone(&user, phoneNumber, ch)
+
+	ans := <-ch
+	if ans == false {
+		log.Println("登录时查询账号信息失败！")
 		c.Redirect(http.StatusMovedPermanently, "/")
 	}
-
 	realPassword := user.Decode()
-	fmt.Println("输入密码: ", password)
-	fmt.Println("用户密码: ", realPassword)
 	if realPassword == password {
-		result, err := user.InsertUserIntoRedis()
-		fmt.Println("redis")
+		token, err := util.GenerateToken(user.Uuid, user.UserName, user.Password)
+		result, err := user.InsertUserIntoRedis(token)
 		if err != nil || result == false {
 			log.Fatalln(err)
 		} else {
@@ -54,7 +53,7 @@ func LoginPost(c *gin.Context) {
 			if result == false {
 				util.CreateDir(user.UserName)
 			}
-			c.SetCookie("userID", user.Uuid, 1*3600, "/", "localhost", false, true)
+			c.SetCookie("token", token, 1*3600, "/", "localhost", false, true)
 			c.Redirect(http.StatusMovedPermanently, "/user/homepage/"+user.UserName)
 		}
 	} else {

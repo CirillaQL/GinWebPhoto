@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	util.InitDB()
@@ -33,7 +34,7 @@ func main() {
 	router.POST("/login", controllers.LoginPost)
 	router.GET("/register", controllers.RegisterGet)
 	router.POST("/register", controllers.RegisterPost)
-
+	router.GET("/quit", controllers.QuitLogin)
 	//用户主界面
 	user := router.Group("/user")
 	user.Use(middleware.VerifyCookie())
@@ -43,8 +44,7 @@ func main() {
 		user.GET("/homepage/:username/AddPicture", controllers.GetAddPicture)
 		user.POST("/action/:username/SavePicture", controllers.GetPicture)
 		user.GET("/action/:username/DeletePicture/:picture", controllers.DeletePicture)
-		user.GET("/action/:username/Quit", controllers.QuitLogin)
-
+		//user.GET("/quit", controllers.QuitLogin)
 	}
 
 	router.Run(":9090")

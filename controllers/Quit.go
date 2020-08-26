@@ -12,7 +12,7 @@ import (
 func RemoveUserIDFromRedis(userID string) (bool, error) {
 	var conn = util.Pool.Get()
 	defer conn.Close()
-
+	fmt.Println("当前的UserID: ", userID)
 	_, err := conn.Do("srem", "userExists", userID)
 	if err != nil {
 		return false, err
@@ -24,6 +24,7 @@ func RemoveUserIDFromRedis(userID string) (bool, error) {
 //退出登录
 func QuitLogin(c *gin.Context) {
 	fmt.Println("调用退出")
+
 	userID, err := c.Cookie("userID")
 	if nil != err {
 		c.Redirect(http.StatusMovedPermanently, "http://localhost:9090")
@@ -35,4 +36,5 @@ func QuitLogin(c *gin.Context) {
 	} else {
 		c.Redirect(http.StatusMovedPermanently, "http://localhost:9090")
 	}
+
 }

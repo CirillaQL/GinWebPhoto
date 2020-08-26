@@ -34,7 +34,7 @@ func RegisterPost(c *gin.Context) {
 		Password:  password,
 		UserPhone: mobile,
 	}
-	go userRegister.CheckUserByPhone(ch)
+	//go userRegister.CheckUserByPhone(ch)
 	userRegister.Encode()
 	ans := <-ch
 
@@ -50,7 +50,7 @@ func RegisterPost(c *gin.Context) {
 		log.Println(result)
 	}
 	util.CreateDir(username)
-	result, err = userRegister.InsertUserIntoRedis()
+	//result, err = userRegister.InsertUserIntoRedis()
 	if err != nil || result != true {
 		log.Println("注册错误")
 		log.Println(err)

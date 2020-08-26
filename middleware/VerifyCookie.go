@@ -19,14 +19,14 @@ func VerifyCookie() gin.HandlerFunc {
 		var conn = util.Pool.Get()
 		defer conn.Close()
 
-		userID, err := c.Cookie("userID")
-		fmt.Println(userID)
+		token, err := c.Cookie("token")
+		fmt.Println("中间件检测，当前Cookie中id为： ", token)
 		if err != nil || userID == "" {
 			c.Abort()
 			c.Redirect(http.StatusMovedPermanently, "/")
 		}
 
-		verifyResult, err := redis.Bool(conn.Do("SISMEMBER", "userExists", userID))
+		verifyResult, err := redis.Bool(conn.Do("hmget", "LoginUser", token))
 		fmt.Println(verifyResult)
 		if verifyResult != true {
 			c.Abort()

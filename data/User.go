@@ -43,6 +43,8 @@ func CreateID() string {
 
 //InsertUserIntoDb 向数据库插入User
 func (user User) InsertUserIntoDB() (bool, error) {
+	tx, _ := util.Db.Begin()
+	defer tx.Rollback()
 	stmt, err := util.Db.Prepare("INSERT INTO GinWebPhoto.User(uuid, UserName, Phone, Password) VALUES(?,?,?,?)")
 	if err != nil {
 		return false, err
@@ -55,15 +57,16 @@ func (user User) InsertUserIntoDB() (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	err = tx.Commit()
 	return true, err
 }
 
 //InsertUserIntoRedis 向Redis中添加用户
-func (user User) InsertUserIntoRedis() (bool, error) {
+func (user User) InsertUserIntoRedis(token string) (bool, error) {
 	var conn = util.Pool.Get()
 	defer conn.Close()
-
-	repl, err := redis.Int64(conn.Do("sadd", "userExists", user.Uuid))
+	fmt.Println("Token: ", token)
+	repl, err := redis.String(conn.Do("hmset", "LoginUser", token, user.Uuid))
 	if err != nil {
 		log.Println(err, repl)
 		return false, err
@@ -78,23 +81,19 @@ func (user User) InsertUserIntoRedis() (bool, error) {
 }
 
 //CheckUserByPhone 通过Phone查询用户
-func (user User) CheckUserByPhone(ch chan bool) {
-	var result string
-	rows, err := util.Db.Query("SELECT Phone FROM User;")
+func CheckUserByPhone(user *User, phone string, ch chan bool) {
+	tx, _ := util.Db.Begin()
+	defer tx.Rollback()
+	result := util.Db.QueryRow("select * from User where Phone = ?", phone)
+	err := result.Scan(&user.Uuid, &user.UserName, &user.UserPhone, &user.Password)
 	if err != nil {
-		log.Fatal(err.Error())
+		tx.Rollback()
+		ch <- false
 	}
-	defer rows.Close()
-	for rows.Next() {
-		err = rows.Scan(&result)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		if user.Uuid == result {
-			ch <- false
-		} else {
-			continue
-		}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		ch <- false
 	}
 	ch <- true
 }
