@@ -22,7 +22,6 @@ func RegisterGet(c *gin.Context) {
 */
 //RegisterPost 用户注册处理
 func RegisterPost(c *gin.Context) {
-	ch := make(chan bool)
 	username := c.PostForm("name")
 	mobile := c.PostForm("mobile")
 	password := c.PostForm("psd")
@@ -34,14 +33,7 @@ func RegisterPost(c *gin.Context) {
 		Password:  password,
 		UserPhone: mobile,
 	}
-	//go userRegister.CheckUserByPhone(ch)
 	userRegister.Encode()
-	ans := <-ch
-
-	if ans == false {
-		log.Println("注册信息重复")
-		c.Redirect(http.StatusMovedPermanently, "/register")
-	}
 
 	result, err := userRegister.InsertUserIntoDB()
 	if err != nil || result != true {
@@ -50,13 +42,20 @@ func RegisterPost(c *gin.Context) {
 		log.Println(result)
 	}
 	util.CreateDir(username)
-	//result, err = userRegister.InsertUserIntoRedis()
 	if err != nil || result != true {
 		log.Println("注册错误")
 		log.Println(err)
-		log.Println(result)
+		log.Fatalln(result)
 	}
-	//c.SetCookie("userID", userRegister.Uuid, 1*3600, "/", "106.54.100.180", false, true)
-	c.SetCookie("userID", userRegister.Uuid, 1*3600, "/", "localhost", false, true)
+	//生成Token
+	token, err := util.GenerateToken(userRegister.Uuid, userRegister.UserName, userRegister.Password)
+	if err != nil {
+		log.Fatalln("Token生成错误")
+	}
+	result, err = userRegister.InsertUserIntoRedis(token)
+	if result == false && err != nil {
+		log.Fatalln("Redis存入失败: error: ", err)
+	}
+	c.SetCookie("token", token, 300, "/", "localhost", false, true)
 	c.Redirect(http.StatusMovedPermanently, "/user/homepage/"+username)
 }

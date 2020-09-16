@@ -2,21 +2,24 @@ package data
 
 import (
 	"GinWebPhoto/util"
-	"io/ioutil"
 	"log"
 	"os"
+	"time"
 )
 
 //Picture 图片的结构体
 type Picture struct {
+	Id           string
 	Name         string
 	LocalAddress string
 	WebAddress   string
 	Describe     string
+	CreateTime   time.Time
 	Owner        string
 }
 
 //GetPictureListFromDir 从文件夹中读取图片信息
+/*
 func GetPictureListFromDir(username string) []Picture {
 	var PictureList []Picture
 	srcDir := "../storage/" + username + "/Photo/"
@@ -34,15 +37,15 @@ func GetPictureListFromDir(username string) []Picture {
 	}
 	return PictureList
 }
-
+*/
 //SavePictureListIntoDataBase 将本地文件存入数据库
 func SavePictureListIntoDataBase(picture []Picture) {
-	stmt, err := util.Db.Prepare("INSERT INTO Picture(NAME, LocalAddress, WebAddress, PhotoInfo, Owner) VALUES (?,?,?,?,?)")
+	stmt, err := util.Db.Prepare("INSERT INTO Picture(id,NAME, LocalAddress, WebAddress, PhotoInfo,CreateTime, Owner) VALUES (?,?,?,?,?)")
 	if err != nil {
 		log.Fatal("Error: ", err)
 	}
 	for _, p := range picture {
-		_, err := stmt.Exec(p.Name, p.LocalAddress, p.WebAddress, p.Describe, p.Owner)
+		_, err := stmt.Exec(p.Id, p.Name, p.LocalAddress, p.WebAddress, p.Describe, p.CreateTime, p.Owner)
 		if err != nil {
 			log.Fatal("插入数据库失败", err)
 		}
@@ -54,17 +57,22 @@ func GetPictureListFromDB(username string) []Picture {
 	var PictureList []Picture
 	var picture Picture
 
-	rows, err := util.Db.Query("SELECT * from Picture where Owner = ?", username)
+	tx, err := util.Db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println("从数据库中读取图片列表时出错： Error", err)
+		tx.Rollback()
 	}
-
-	defer rows.Close()
-
+	defer tx.Commit()
+	rows, err := tx.Query("SELECT * from Picture where Owner = ?", username)
+	if err != nil {
+		log.Println("从数据库中读取图片列表时出错： Error", err)
+		tx.Rollback()
+	}
 	for rows.Next() {
-		err = rows.Scan(&picture.Name, &picture.LocalAddress, &picture.WebAddress, &picture.Describe, &picture.Owner)
+		err = rows.Scan(&picture.Id, &picture.Name, &picture.LocalAddress, &picture.WebAddress, &picture.Describe, &picture.CreateTime, &picture.Owner)
 		if err != nil {
 			log.Fatal(err)
+			tx.Rollback()
 		}
 		PictureList = append(PictureList, picture)
 	}
@@ -74,22 +82,20 @@ func GetPictureListFromDB(username string) []Picture {
 
 //SavePictureToDataBase 保存图片到数据库
 func SavePictureToDataBase(picture Picture) (bool, error) {
+	//使用事务进行操作，
 	tx, _ := util.Db.Begin()
 	defer tx.Rollback()
-	stmt, _ := util.Db.Prepare("insert into Picture(Name, LocalAddress, WebAddress, PhotoInfo, Owner) value (?,?,?,?,?);")
-	defer stmt.Close()
-	_, err := stmt.Exec(picture.Name, picture.LocalAddress, picture.WebAddress, picture.Describe, picture.Owner)
+	_, err := tx.Exec("insert into Picture(id,Name, LocalAddress, WebAddress, PhotoInfo,CreateTime ,Owner) value (?,?,?,?,?,?,?);",
+		picture.Id, picture.Name, picture.LocalAddress, picture.WebAddress, picture.Describe, picture.CreateTime, picture.Owner)
 	if err != nil {
 		log.Println("插入数据库失败！ ERROR: ", err)
+		_ = tx.Rollback()
 		return false, err
 	}
 	err = tx.Commit()
 	if err != nil {
 		log.Println("插入数据库失败！ ERROR: ", err)
-		return false, err
-	}
-	if err != nil {
-		log.Println("插入数据库失败！ ERROR: ", err)
+		_ = tx.Rollback()
 		return false, err
 	}
 	return true, nil

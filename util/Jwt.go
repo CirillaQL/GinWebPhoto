@@ -21,7 +21,7 @@ type Claims struct {
 }
 
 var (
-	Secret = "dong_tech"
+	Secret = "GinWebPhoto"
 )
 
 //生成目标Token
