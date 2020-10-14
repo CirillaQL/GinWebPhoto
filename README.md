@@ -4,4 +4,4 @@
 
 ## 系统架构：
 
-![image](../img/GinWebPhoto.png)
+![image](../master/img/GinWebPhoto.png)
